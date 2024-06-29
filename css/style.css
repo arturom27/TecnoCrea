@@ -1007,15 +1007,18 @@ div#preloader {
 }
 
 .work-left-text {
-  background: #3C78A3 none repeat scroll 0 0;
-}
-
-.work-left-text {
+  background: #3C78A3;
   width: 50%;
 }
 
+.work-left-text video {
+  width: 100%;
+  height: auto;
+
+}
+
 .work-right-text {
-  background: rgba(0, 0, 0, 0.8) none repeat scroll 0 0;
+  background: rgba(0, 0, 0, 0.8);
   float: right;
   height: 100%;
   overflow: hidden;
