@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <title>TecnoCrea</title>
@@ -37,7 +37,48 @@
   <style>
             h1.special-font span {
             font-family: 'Yellowtail', cursive;
-        }
+          }
+
+          #modal {
+    display: none;
+    position: fixed;
+    z-index: 101;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+}
+
+#modal-content {
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos se apilen verticalmente */
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: relative; /* Asegura que los elementos absolutamente posicionados se ajusten dentro */
+    border-radius: 20px;
+}
+
+#viewer {
+    width: 70%;
+    height: 80vh;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+#viewer canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
     </style>
 </head>
 
@@ -193,22 +234,25 @@
   </div>
   <!-- End Slider Area -->
 
-  <!-- Start reviews Area -->
-  <div id= "contacto" class="reviews-area hidden-xs">
-    <div class="work-us">
-      <div class="work-left-text">
-        <a href="#">
-						<img src="img/about/2.jpg" alt="">
-					</a>
-      </div>
-      <div class="work-right-text text-center">
-        <h2>Lorem ipsum</h2>
-        <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit.luctus est eget congue.</h5>
-        <a href="#contact" class="ready-btn">Nuestro contacto</a>
-      </div>
+<!-- Start reviews Area -->
+<div id="contacto" class="reviews-area hidden-xs">
+  <div class="work-us">
+    <div class="work-left-text">
+        <video controls>
+          <source src="video/video.mp4" type="video/mp4">
+          Tu navegador no soporta el video.
+        </video>
+      </a>
+    </div>
+    <div class="work-right-text text-center">
+      <h2>Conoce TecnoCrea</h2>
+      <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Luctus est eget congue.</h5>
+      <a href="#contact" class="ready-btn">Nuestro contacto</a>
     </div>
   </div>
-  <!-- End reviews Area -->
+</div>
+<!-- End reviews Area -->
+
   <!-- Start Suscrive Area -->
   <div class="suscribe-area">
     <div class="container">
@@ -524,6 +568,11 @@
                         <i class="fa-solid fa-file-arrow-down"></i>
                       </a>
                     </li>
+                    <li>
+                      <a href="#" data-file="./3D/posacellulare2.stl">
+                      <i class="fa-brands fa-unity"></i>
+												</a>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -545,6 +594,11 @@
                     <li>
                       <a href="https://img1.wsimg.com/blobby/go/6bf353ba-b9a2-432b-8dfa-4fec78ea1cba/downloads/Rotating%20folding%20solar%20panel%20%20-%203982169.zip?ver=1717899528965">
                         <i class="fa-solid fa-file-arrow-down"></i>
+												</a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa-brands fa-unity"></i>
 												</a>
                     </li>
                   </ul>
@@ -570,6 +624,11 @@
                         <i class="fa-solid fa-file-arrow-down"></i>
 												</a>
                     </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa-brands fa-unity"></i>
+												</a>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -591,6 +650,11 @@
                     <li>
                       <a href="https://img1.wsimg.com/blobby/go/6bf353ba-b9a2-432b-8dfa-4fec78ea1cba/downloads/Chameleon%20Pen%20Holder%20-%206465187.zip?ver=1717899528965">
                         <i class="fa-solid fa-file-arrow-down"></i>
+												</a>
+                    </li>
+                                        <li>
+                      <a href="#">
+                        <i class="fa-brands fa-unity"></i>
 												</a>
                     </li>
                   </ul>
@@ -1001,6 +1065,13 @@
     </div>
   </footer>
 
+  <div id="modal">
+    <div id="modal-content">
+        <div id="viewer"></div>
+    </div>
+</div>
+
+
   <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
 
   <!-- JavaScript Libraries -->
@@ -1021,6 +1092,113 @@
   <script src="contactform/contactform.js"></script>
 
   <script src="js/main.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/loaders/STLLoader.js"></script>
+  <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // Cargar y configurar el visor 3D
+    let scene, camera, renderer, controls;
+    let closeButton; // Variable global para el botón de cerrar
+
+    function init() {
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xdddddd);
+
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 5;
+
+      renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.getElementById('viewer').appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+      let light = new THREE.DirectionalLight(0xffffff);
+      light.position.set(1, 1, 1).normalize();
+      scene.add(light);
+
+      // Agregar luz ambiental
+      let ambientLight = new THREE.AmbientLight(0x404040); // Color gris oscuro
+      scene.add(ambientLight);
+
+      window.addEventListener('resize', onWindowResize, false);
+
+      animate();
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function loadSTL(file) {
+      let loader = new THREE.STLLoader();
+      loader.load(file, function (geometry) {
+        clearScene();
+        let material = new THREE.MeshBasicMaterial({ color: 0x696969 });
+        let mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+      });
+    }
+
+    function clearScene() {
+      while (scene.children.length > 0) {
+        scene.remove(scene.children[0]);
+      }
+    }
+
+    function openModal() {
+      // Verificar si ya existe un botón de cerrar
+      if (!closeButton) {
+        // Crear el botón de cerrar dinámicamente
+        closeButton = document.createElement('a');
+        closeButton.setAttribute('href', '#');
+        closeButton.setAttribute('id', 'close');
+        closeButton.innerHTML = '&times;'; // Icono de "X"
+
+        // Agregar evento para cerrar el modal al hacer clic en el botón
+        closeButton.addEventListener('click', function(event) {
+          event.preventDefault();
+          closeModal();
+        });
+
+        // Agregar el botón de cerrar al modal
+        document.getElementById('modal-content').appendChild(closeButton);
+      }
+
+      // Mostrar el modal
+      document.getElementById('modal').style.display = "block";
+      controls.update();
+    }
+
+    function closeModal() {
+      // Ocultar el modal
+      document.getElementById('modal').style.display = "none";
+    }
+
+    // Inicializar el visor 3D
+    init();
+
+    // Escuchar clics en los enlaces de descarga
+    document.querySelectorAll('.team-social-icon a').forEach(button => {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        let file = this.getAttribute('data-file');
+        loadSTL(file);
+        openModal();
+      });
+    });
+</script>
+
+    
 </body>
 
 </html>
